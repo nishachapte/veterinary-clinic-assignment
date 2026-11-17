@@ -1,0 +1,14 @@
+# The backend, unmodified, straight from the project's published image.
+# Nothing in this repository changes Spring PetClinic REST.
+services:
+  petclinic-api:
+    image: springcommunity/spring-petclinic-rest:latest
+    container_name: petclinic-api
+    ports:
+      - '9966:9966'
+    healthcheck:
+      test:
+        ['CMD', 'wget', '-q', '-O', '-', 'http://localhost:9966/petclinic/api/pettypes']
+      interval: 5s
+      timeout: 3s
+      retries: 20

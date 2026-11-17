@@ -1,0 +1,25 @@
+.empty, .loading {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+.error {
+  background: var(--danger-soft);
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.errorText { margin: 0 0 6px; font-size: 13.5px; color: var(--danger); }
+.errorText:last-of-type { margin-bottom: 0; }
+
+.retry {
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 13px;
+}

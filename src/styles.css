@@ -1,0 +1,66 @@
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --panel-alt: #fafbfc;
+  --border: #dfe3e8;
+  --text: #1a1f26;
+  --muted: #5d6874;
+  --accent: #1f6feb;
+  --accent-soft: #e8f0fe;
+  --danger: #b4232c;
+  --danger-soft: #fdecee;
+  --radius: 8px;
+  --zone-gap: 14px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14171a;
+    --panel: #1c2024;
+    --panel-alt: #22272c;
+    --border: #333a42;
+    --text: #e8eaed;
+    --muted: #9aa5b1;
+    --accent: #589bff;
+    --accent-soft: #1d2f4a;
+    --danger: #ff8a8a;
+    --danger-soft: #3a1f22;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+button { font: inherit; cursor: pointer; }
+
+input, select, textarea {
+  font: inherit;
+  color: inherit;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 9px;
+  width: 100%;
+}
+
+input:focus-visible, select:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+textarea { resize: vertical; min-height: 60px; font-family: inherit; }

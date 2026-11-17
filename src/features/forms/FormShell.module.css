@@ -1,0 +1,24 @@
+.banner {
+  background: var(--danger-soft);
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+  padding: 9px 11px;
+  margin-bottom: 12px;
+}
+.bannerText { margin: 0 0 4px; font-size: 13px; color: var(--danger); }
+.bannerText:last-child { margin-bottom: 0; }
+
+.actions { display: flex; gap: 7px; margin-top: 4px; }
+
+.primary {
+  background: var(--accent); color: #fff; border: 1px solid var(--accent);
+  border-radius: 6px; padding: 7px 14px; font-size: 13.5px; font-weight: 600;
+}
+.primary:disabled { opacity: 0.6; cursor: progress; }
+
+.secondary {
+  background: transparent; color: var(--muted);
+  border: 1px solid var(--border); border-radius: 6px;
+  padding: 7px 14px; font-size: 13.5px;
+}
+.secondary:hover { border-color: var(--accent); color: var(--accent); }

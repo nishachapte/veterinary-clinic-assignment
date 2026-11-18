@@ -2,7 +2,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import { render, type RenderResult } from '@testing-library/react';
 import { useEffect } from 'react';
-import { DeskPage } from '~/app/DeskPage';
+import { ReceptionDeskPage } from '~/features/reception/ReceptionDeskPage';
 
 /** Records every location the desk passes through, so a test can assert that
  *  the whole workflow happens without navigating. */
@@ -35,7 +35,7 @@ export const renderDesk = (initialEntry = '/desk'): DeskHarness => {
             paths.push(p);
           }}
         />
-        <DeskPage />
+        <ReceptionDeskPage />
       </MemoryRouter>
     </QueryClientProvider>,
   );

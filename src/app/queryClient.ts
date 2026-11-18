@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import { ApiError } from '~/api/client';
+import { ApiError } from '~/lib/apiClient';
 
 /**
  * A 4xx will not succeed on retry, so retrying it only delays the error the

@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { george, owners, petTypes } from './fixtures';
-import type { PetRequestBody, VisitRequestBody } from '~/api/payloads';
+import type { PetRequestBody } from '~/features/pets/api/petApi';
+import type { VisitRequestBody } from '~/features/visits/api/visitApi';
 
 /** Mirrors the real server, including its case-sensitive prefix filter. */
 const filterByLastName = (lastName: string) =>
@@ -65,7 +66,7 @@ export const handlers = [
       : HttpResponse.json(betty()),
   ),
 
-  // The request body is typed from `~/api/payloads`, the same type the client
+  // The request body is typed from `~/features/*/api`, the same type the client
   // builds, so a change to what the app sends fails to compile HERE rather than
   // leaving the mock quietly accepting a shape nothing produces.
   http.post<{ ownerId: string }, PetRequestBody>(

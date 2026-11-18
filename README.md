@@ -53,7 +53,7 @@ This needs a JDK 17+. The app talks to the same port either way.
 | `npm test`          | Unit, component and contract tests                            |
 | `npm run typecheck` | TypeScript, strict                                            |
 | `npm run lint`      | ESLint, type-aware                                            |
-| `npm run gen:api`   | Regenerates `src/api/schema.d.ts` from `api-spec/openapi.yml` |
+| `npm run gen:api`   | Regenerates `src/types/api.d.ts` from `api-spec/openapi.yml` |
 | `npm run build`     | Typecheck + production build                                  |
 
 The frontend talks to a same-origin `/api`, proxied to the backend in
@@ -61,20 +61,28 @@ The frontend talks to a same-origin `/api`, proxied to the backend in
 work — the proxy exists so the app never depends on that, and so the dev setup
 matches how it would be deployed.
 
-> **Contract tests** in `src/api/contract.test.ts` run against the live backend
+> **Contract tests** in `src/test/contract.test.ts` run against the live backend
 > and skip automatically when it is not up, so `npm test` passes without Docker.
 
 ---
 
 ## Architecture
 
-| Layer            | Responsibility                                                      |
-| ---------------- | ------------------------------------------------------------------- |
-| `src/api`        | HTTP, wire schemas, DTO→domain mapping, error parsing. No React.    |
-| `src/domain`     | Branded ids, models, date helpers, Zod schemas. No feature imports. |
-| `src/features`   | `owner-search`, `owner-detail`, `pet-detail`, `visits`              |
-| `src/components` | `Panel`, feedback primitives                                        |
-| `src/app`        | Providers, routing, selection state, `DeskPage`                     |
+**Feature-first.** Each business capability keeps its own components, hooks,
+API calls, schemas and types together, rather than scattering them across
+folders organised by technical kind.
+
+| Folder          | Responsibility                                                      |
+| --------------- | ------------------------------------------------------------------- |
+| `src/features`  | `owners`, `pets`, `visits`, `reception` — each with its own `api/`, `components/`, `schemas/` and `types.ts` |
+| `src/shared`    | `components/` (Panel, Field, Feedback, FormShell, QueryGate), `hooks/`, `utils/`, `schemas/` |
+| `src/lib`       | `apiClient`, `apiError`, `queryKeys` — the HTTP boundary. No React. |
+| `src/types`     | Branded ids, and the generated OpenAPI types                        |
+| `src/app`       | `App`, `providers`, `router`, `queryClient`                         |
+
+A feature may import another's `types.ts` — `Owner` contains `Pet[]`, which
+contains `Visit[]` — because the API nests them that way. Nothing in
+`src/shared`, `src/lib` or `src/types` imports a feature.
 
 **One workspace, three persistent zones.** Search on the left, the owner in the
 centre, the selected pet on the right. Selecting an owner or a pet changes
@@ -113,7 +121,7 @@ conversation and every mutation reconciles exactly one cache key.
 
 `new Date("2013-01-01")` parses as **UTC midnight**, so in any negative-offset
 timezone it renders as _2012-12-31_. API dates therefore stay strings
-end-to-end, and `src/domain/date.ts` is the only module permitted to touch
+end-to-end, and `src/shared/utils/date.ts` is the only module permitted to touch
 `Date` — enforced by an ESLint rule, not by convention. Comparison and sorting
 need no `Date` at all, since ISO dates sort chronologically as plain strings.
 

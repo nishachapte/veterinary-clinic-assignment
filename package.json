@@ -10,7 +10,7 @@
     "build": "tsc --noEmit -p tsconfig.app.json && vite build",
     "dev": "vite",
     "format": "prettier --write .",
-    "gen:api": "openapi-typescript api-spec/openapi.yml -o src/api/schema.d.ts",
+    "gen:api": "openapi-typescript api-spec/openapi.yml -o src/types/api.d.ts",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",

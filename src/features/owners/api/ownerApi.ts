@@ -14,11 +14,11 @@ import {
   type UseQueryResult,
 } from '@tanstack/react-query';
 import { apiMutateVoid, apiRequest } from '~/lib/apiClient';
-import { q, qk } from '~/lib/queryKeys';
+import { qk } from '~/lib/queryKeys';
 import type { OwnerId } from '~/types/ids';
 import type { OwnerFieldsPayload } from '../schemas/ownerSchema';
-import type { Owner, OwnerPage } from '../types';
-import { ownerDtoSchema, ownerPageDtoSchema, toOwner, toOwnerPage } from './ownerDto';
+import type { Owner } from '../types';
+import { ownerDtoSchema, toOwner } from './ownerDto';
 
 export interface OwnerRequestBody {
   firstName: string;
@@ -35,22 +35,6 @@ export const ownerBody = (v: OwnerFieldsPayload): OwnerRequestBody => ({
   city: v.city,
   telephone: v.telephone,
 });
-
-export const useOwnerSearch = (
-  lastName: string,
-  page: number,
-  size: number,
-  enabled: boolean,
-): UseQueryResult<OwnerPage> =>
-  useQuery({
-    queryKey: qk.ownerSearch(lastName, page, size),
-    queryFn: ({ signal }) =>
-      apiRequest(`/v2/owners?${q({ lastName, page, size })}`, ownerPageDtoSchema, {
-        signal,
-      }).then(toOwnerPage),
-    enabled,
-    placeholderData: (previous) => previous, // keep results visible while retyping
-  });
 
 export const useOwner = (id: OwnerId | null): UseQueryResult<Owner> =>
   useQuery({
@@ -70,7 +54,7 @@ export const useCreateOwner = (): UseMutationResult<Owner, Error, OwnerFieldsPay
       }).then(toOwner),
     onSuccess: async (owner) => {
       client.setQueryData(qk.owner(owner.id), owner);
-      await client.invalidateQueries({ queryKey: ['owners'] });
+      await client.invalidateQueries({ queryKey: qk.owners() });
     },
   });
 };
@@ -89,7 +73,7 @@ export const useUpdateOwner = (
     onSuccess: async () => {
       await Promise.all([
         client.invalidateQueries({ queryKey: qk.owner(id) }),
-        client.invalidateQueries({ queryKey: ['owners'] }),
+        client.invalidateQueries({ queryKey: qk.owners() }),
       ]);
     },
   });

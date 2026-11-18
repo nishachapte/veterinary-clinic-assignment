@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { SelectField, TextField } from '~/shared/components/Field';
 import { FormShell } from '~/shared/components/FormShell';
+import { useGuardedSubmit } from '~/shared/hooks/useGuardedSubmit';
 import { applyServerErrors } from '~/shared/utils/serverErrors';
 import { petFieldsSchema } from '~/features/pets/schemas/petSchema';
 import type { PetFieldsPayload, PetFormValues } from '~/features/pets/schemas/petSchema';
@@ -60,11 +61,11 @@ export const PetForm = ({
     }
   });
 
+  const guardedSubmit = useGuardedSubmit(submit);
+
   return (
     <FormShell
-      onSubmit={(event) => {
-        void submit(event);
-      }}
+      onSubmit={guardedSubmit}
       onCancel={onCancel}
       submitLabel={submitLabel}
       pending={pending}

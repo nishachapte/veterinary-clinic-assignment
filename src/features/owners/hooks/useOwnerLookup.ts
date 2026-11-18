@@ -9,6 +9,7 @@
 
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { apiRequest } from '~/lib/apiClient';
+import { qk } from '~/lib/queryKeys';
 import { ownerPageDtoSchema, toOwnerPage } from '../api/ownerDto';
 import type { Owner } from '~/features/owners/types';
 import { looksNumeric, matchesOwner } from '../matching';
@@ -101,7 +102,7 @@ const lookup = async (query: string, signal: AbortSignal): Promise<LookupResult>
 
 export const useOwnerLookup = (query: string): UseQueryResult<LookupResult> =>
   useQuery({
-    queryKey: ['ownerLookup', query.trim()] as const,
+    queryKey: qk.ownerLookup(query.trim()),
     queryFn: ({ signal }) => lookup(query, signal),
     enabled: query.trim().length > 0,
     placeholderData: (previous) => previous,

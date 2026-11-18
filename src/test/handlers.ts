@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
 import { george, owners, petTypes } from './fixtures';
 import type { PetRequestBody } from '~/features/pets/api/petApi';
+import type { OwnerRequestBody } from '~/features/owners/api/ownerApi';
 import type { VisitRequestBody } from '~/features/visits/api/visitApi';
 
 /** Mirrors the real server, including its case-sensitive prefix filter. */
@@ -25,8 +26,14 @@ let created = {
   nextId: 100,
 };
 
+/** Field edits applied by a PUT, so a refetch reflects what was saved. */
+let ownerEdits: Partial<OwnerRequestBody> = {};
+let petEdits = new Map<number, PetRequestBody>();
+
 export const resetCreated = (): void => {
   created = { pets: [], visits: [], nextId: 100 };
+  ownerEdits = {};
+  petEdits = new Map();
 };
 
 /** Lets a test assert that a form did NOT reach the server. */
@@ -34,12 +41,14 @@ export const createdPetCount = (): number => created.pets.length;
 
 const withCreatedVisits = (pet: CreatedPet): CreatedPet => ({
   ...pet,
+  ...petEdits.get(pet.id),
   visits: [...pet.visits, ...created.visits.filter((v) => v.petId === pet.id)],
 });
 
 // One rule for every pet, whether it came from the fixtures or from a POST.
 const ownerWithCreated = () => ({
   ...george,
+  ...ownerEdits,
   pets: [...george.pets, ...created.pets].map(withCreatedVisits),
 });
 
@@ -50,7 +59,11 @@ export const handlers = [
     const url = new URL(request.url);
     const lastName = url.searchParams.get('lastName') ?? '';
     const size = Number(url.searchParams.get('size') ?? '20');
-    const content = filterByLastName(lastName);
+    const content = filterByLastName(lastName).map((o) => ({
+      ...o,
+      ...(o.id === george.id ? ownerEdits : {}),
+      pets: o.pets.map((pet) => ({ ...pet, ...petEdits.get(pet.id) })),
+    }));
     return HttpResponse.json({
       content,
       page: 0,
@@ -59,6 +72,23 @@ export const handlers = [
       totalPages: content.length === 0 ? 0 : 1,
     });
   }),
+
+  // The real server answers 204 with no body, so the client must refetch.
+  http.put<{ ownerId: string }, OwnerRequestBody>(
+    '/api/owners/:ownerId',
+    async ({ request }) => {
+      ownerEdits = await request.json();
+      return new HttpResponse(null, { status: 204 });
+    },
+  ),
+
+  http.put<{ petId: string }, PetRequestBody>(
+    '/api/owners/:ownerId/pets/:petId',
+    async ({ request, params }) => {
+      petEdits.set(Number(params.petId), await request.json());
+      return new HttpResponse(null, { status: 204 });
+    },
+  ),
 
   http.get('/api/owners/:ownerId', ({ params }) =>
     params.ownerId === '1'

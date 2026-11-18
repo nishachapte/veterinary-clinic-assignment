@@ -165,13 +165,59 @@ around, as neither reaches the UI.
 
 ## Known limitations
 
+### Authentication
+
+The backend runs with authentication and authorisation **disabled** — verified:
+`GET /petclinic/api/pettypes` answers `200` with no credentials. Every request
+this app makes is therefore unauthenticated, and there is no signed-in
+receptionist, no audit trail and no per-role permission anywhere in the
+system. That is acceptable for a controlled local demo and **not** acceptable
+for a clinic deployment, where the backend's security would need enabling and
+a token attaching in `src/lib/apiClient.ts`.
+
+### Data availability
+
+`lastName` is filtered server-side as a case-sensitive prefix; first name,
+telephone and pet name are matched client-side inside a bounded scan of the
+first 100 records (`PAGE_SIZE × MAX_PAGES` in `useOwnerLookup`).
+
+**An empty result is not proof that a record does not exist.** It means
+nothing matched within the window that was examined. The UI never claims
+otherwise — it reports "searched all N records" or "searched the first N of
+M", and its empty state names the limit rather than saying "no results".
+
+### Visit history capabilities
+
+Confirmed against `api-spec/openapi.yml`:
+
+- There is no `GET /owners/{ownerId}/pets/{petId}/visits`. History is read
+  from the nested `pets[].visits` of `GET /owners/{id}`, so it cannot be paged
+  for a pet with a long history.
+- `VisitFields` carries exactly two properties: `date` and `description`.
+  There is **no veterinarian assignment, no appointment status, no time of day
+  and no structured medical note** anywhere in the contract. None is invented
+  in the UI, and none should be added without a backend change.
+- `updateVisit` and `deleteVisit` *do* exist at `/visits/{visitId}`. This app
+  implements neither, so visits are append-only here. That is a scope
+  decision, not an API constraint.
+
+### Offline mode and concurrency
+
+No offline write queue and no conflict resolution are in scope. Two
+receptionists editing one owner is last-write-wins, silently; the API exposes
+no `ETag` or `If-Match` to build optimistic concurrency on.
+
+**A failed request is never presented as a successful save.** The mutation
+rejects, the form stays open with everything typed still in it, and the error
+is shown either on the field the server named or in a form-level banner.
+Covered by the tests "keeps typed input when the save fails" and "lets the
+receptionist retry after a save fails".
+
+### Other
+
 - A visit appears once the server confirms it rather than optimistically. The
   API returns the created visit with its id, so the cache is updated without a
   refetch, but there is a brief pending state.
-- Search matches last name server-side; first name, telephone and pet name are
-  matched only within the first 100 records scanned. The UI states this.
-- No concurrency control — two receptionists editing one owner is
-  last-write-wins, silently. The API offers nothing to build on.
 - Data resets when the backend container restarts (H2 in-memory).
 - Below 720px the desk is unsupported by design.
 
@@ -183,9 +229,9 @@ All six required abilities are implemented and working against the live
 backend: find an owner, create one, see details and pets, open a pet with its
 visit history, record a visit, add a pet, and edit owner and pet information.
 
-70 tests pass across four tiers — unit (dates, matching, error parsing),
-component behaviour via MSW, a workflow integration test, and live contract
-tests against the running server.
+88 tests pass across four tiers — unit (dates, matching, error parsing,
+schema rules), component behaviour via MSW, workflow and failure-path
+integration tests, and live contract tests against the running server.
 
 Not built, and recorded as limitations rather than hidden: optimistic visit
 creation (a visit appears after the server confirms, which is fast but not

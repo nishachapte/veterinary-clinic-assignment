@@ -65,7 +65,8 @@ export const useCreatePet = (
         body: petBody(values, types),
       }),
     onSuccess: async () => {
-      await client.invalidateQueries({ queryKey: qk.owner(id) });
+      // The search row lists each owner's pets, so it is stale too.
+      await client.invalidateQueries({ queryKey: qk.owners() });
     },
   });
 };
@@ -83,7 +84,7 @@ export const useUpdatePet = (
         body: petBody(values, types),
       }),
     onSuccess: async () => {
-      await client.invalidateQueries({ queryKey: qk.owner(owner) });
+      await client.invalidateQueries({ queryKey: qk.owners() });
     },
   });
 };

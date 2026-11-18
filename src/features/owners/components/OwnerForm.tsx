@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { TextField } from '~/shared/components/Field';
 import { FormShell } from '~/shared/components/FormShell';
+import { useGuardedSubmit } from '~/shared/hooks/useGuardedSubmit';
 import { applyServerErrors } from '~/shared/utils/serverErrors';
 import { ownerFieldsSchema } from '~/features/owners/schemas/ownerSchema';
 import type { OwnerFieldsPayload, OwnerFormValues } from '~/features/owners/schemas/ownerSchema';
@@ -54,11 +55,11 @@ export const OwnerForm = ({
     }
   });
 
+  const guardedSubmit = useGuardedSubmit(submit);
+
   return (
     <FormShell
-      onSubmit={(event) => {
-        void submit(event);
-      }}
+      onSubmit={guardedSubmit}
       onCancel={onCancel}
       submitLabel={submitLabel}
       pending={pending}

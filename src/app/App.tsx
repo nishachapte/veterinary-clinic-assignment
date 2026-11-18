@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { createQueryClient } from './queryClient';
 import { DeskPage } from './DeskPage';
 
-export const App = (): React.JSX.Element => {
+export const App = () => {
   // Created in state so React 19 StrictMode's double-invoke does not discard
   // the cache on the second render pass.
   const [client] = useState(createQueryClient);

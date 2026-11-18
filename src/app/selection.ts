@@ -15,15 +15,15 @@ import { ownerId, parseIdParam, petId } from '~/domain/ids';
 import type { OwnerId, PetId } from '~/domain/ids';
 
 export interface Selection {
-  readonly query: string;
-  readonly ownerId: OwnerId | null;
-  readonly petId: PetId | null;
+  query: string;
+  ownerId: OwnerId | null;
+  petId: PetId | null;
 }
 
 export interface SelectionPatch {
-  readonly query?: string;
-  readonly ownerId?: OwnerId | null;
-  readonly petId?: PetId | null;
+  query?: string;
+  ownerId?: OwnerId | null;
+  petId?: PetId | null;
 }
 
 const PARAM = { query: 'q', owner: 'owner', pet: 'pet' } as const;

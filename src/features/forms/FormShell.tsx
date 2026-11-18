@@ -4,12 +4,12 @@ import styles from './FormShell.module.css';
 interface FormShellProps {
   // React 19's types deprecate FormEvent/FormEventHandler; SyntheticEvent is
   // the supported shape, and it is what RHF's handleSubmit accepts.
-  readonly onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void;
-  readonly onCancel: () => void;
-  readonly submitLabel: string;
-  readonly pending: boolean;
-  readonly formErrors: readonly string[];
-  readonly children: ReactNode;
+  onSubmit: (event: SyntheticEvent<HTMLFormElement>) => void;
+  onCancel: () => void;
+  submitLabel: string;
+  pending: boolean;
+  formErrors: readonly string[];
+  children: ReactNode;
 }
 
 export const FormShell = ({
@@ -19,7 +19,7 @@ export const FormShell = ({
   pending,
   formErrors,
   children,
-}: FormShellProps): React.JSX.Element => (
+}: FormShellProps) => (
   <form onSubmit={onSubmit} noValidate>
     {formErrors.length > 0 && (
       <div className={styles.banner} role="alert">

@@ -2,11 +2,11 @@ import type { ReactNode } from 'react';
 import { ApiError, ResponseShapeError, TransportError } from '~/api/client';
 import styles from './Feedback.module.css';
 
-export const EmptyState = ({ children }: { children: ReactNode }): React.JSX.Element => (
+export const EmptyState = ({ children }: { children: ReactNode }) => (
   <p className={styles.empty}>{children}</p>
 );
 
-export const Loading = ({ label }: { label: string }): React.JSX.Element => (
+export const Loading = ({ label }: { label: string }) => (
   <p className={styles.loading} role="status">
     {label}
   </p>
@@ -27,16 +27,16 @@ export const describeError = (error: unknown): string => {
 };
 
 interface ErrorNoticeProps {
-  readonly error: unknown;
-  readonly onRetry?: (() => void) | undefined;
-  readonly extra?: readonly string[];
+  error: unknown;
+  onRetry?: (() => void) | undefined;
+  extra?: readonly string[];
 }
 
 export const ErrorNotice = ({
   error,
   onRetry,
   extra = [],
-}: ErrorNoticeProps): React.JSX.Element => (
+}: ErrorNoticeProps) => (
   <div className={styles.error} role="alert">
     <p className={styles.errorText}>{describeError(error)}</p>
     {extra.map((m) => (

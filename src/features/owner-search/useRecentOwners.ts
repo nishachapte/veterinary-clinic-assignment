@@ -12,8 +12,8 @@ const KEY = 'reception-desk.recent-owners';
 const LIMIT = 5;
 
 export interface RecentOwner {
-  readonly id: OwnerId;
-  readonly label: string;
+  id: OwnerId;
+  label: string;
 }
 
 const read = (): readonly RecentOwner[] => {

@@ -15,7 +15,7 @@ const LocationProbe = ({ onChange }: { onChange: (path: string) => void }) => {
 };
 
 export interface DeskHarness extends RenderResult {
-  readonly paths: readonly string[];
+  paths: readonly string[];
 }
 
 export const renderDesk = (initialEntry = '/desk'): DeskHarness => {

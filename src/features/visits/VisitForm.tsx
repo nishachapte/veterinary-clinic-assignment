@@ -11,16 +11,16 @@ import { todayIso } from '~/domain/date';
 const FIELDS = ['date', 'description'] as const;
 
 interface VisitFormProps {
-  readonly pending: boolean;
-  readonly onSubmit: (values: VisitFieldsPayload) => Promise<unknown>;
-  readonly onCancel: () => void;
+  pending: boolean;
+  onSubmit: (values: VisitFieldsPayload) => Promise<unknown>;
+  onCancel: () => void;
 }
 
 export const VisitForm = ({
   pending,
   onSubmit,
   onCancel,
-}: VisitFormProps): React.JSX.Element => {
+}: VisitFormProps) => {
   const [formErrors, setFormErrors] = useState<readonly string[]>([]);
 
   const { register, handleSubmit, setError, formState, reset } = useForm<

@@ -2,12 +2,12 @@ import type { ReactNode } from 'react';
 import styles from './Panel.module.css';
 
 interface PanelProps {
-  readonly title: string;
-  readonly subtitle?: string | undefined;
-  readonly actions?: ReactNode;
-  readonly children: ReactNode;
+  title: string;
+  subtitle?: string | undefined;
+  actions?: ReactNode;
+  children: ReactNode;
   /** Rendered as the zone's landmark label for screen readers. */
-  readonly ariaLabel?: string | undefined;
+  ariaLabel?: string | undefined;
 }
 
 export const Panel = ({
@@ -16,7 +16,7 @@ export const Panel = ({
   actions,
   children,
   ariaLabel,
-}: PanelProps): React.JSX.Element => (
+}: PanelProps) => (
   <section className={styles.panel} aria-label={ariaLabel ?? title}>
     <header className={styles.header}>
       <div>

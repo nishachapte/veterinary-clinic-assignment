@@ -43,9 +43,9 @@ export const isApiError = (e: unknown): e is ApiError => e instanceof ApiError;
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 interface RequestInit_ {
-  readonly method?: HttpMethod;
-  readonly body?: unknown;
-  readonly signal?: AbortSignal | undefined;
+  method?: HttpMethod;
+  body?: unknown;
+  signal?: AbortSignal | undefined;
 }
 
 async function send(path: string, init: RequestInit_): Promise<Response> {

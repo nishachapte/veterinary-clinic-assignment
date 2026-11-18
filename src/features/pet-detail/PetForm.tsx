@@ -18,12 +18,12 @@ import type { PetTypeRef } from '~/domain/models';
 const FIELDS = ['name', 'birthDate', 'typeId', 'type'] as const;
 
 interface PetFormProps {
-  readonly defaultValues?: PetFormValues;
-  readonly types: readonly PetTypeRef[];
-  readonly submitLabel: string;
-  readonly pending: boolean;
-  readonly onSubmit: (values: PetFieldsPayload) => Promise<unknown>;
-  readonly onCancel: () => void;
+  defaultValues?: PetFormValues;
+  types: readonly PetTypeRef[];
+  submitLabel: string;
+  pending: boolean;
+  onSubmit: (values: PetFieldsPayload) => Promise<unknown>;
+  onCancel: () => void;
 }
 
 export const PetForm = ({
@@ -33,7 +33,7 @@ export const PetForm = ({
   pending,
   onSubmit,
   onCancel,
-}: PetFormProps): React.JSX.Element => {
+}: PetFormProps) => {
   const [formErrors, setFormErrors] = useState<readonly string[]>([]);
 
   const { register, handleSubmit, setError, formState } = useForm<

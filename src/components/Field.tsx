@@ -8,9 +8,9 @@ import type {
 import styles from './Field.module.css';
 
 interface Wrapper {
-  readonly label: string;
-  readonly error?: string | undefined;
-  readonly hint?: string | undefined;
+  label: string;
+  error?: string | undefined;
+  hint?: string | undefined;
 }
 
 type TextFieldProps = Wrapper & InputHTMLAttributes<HTMLInputElement>;
@@ -42,11 +42,11 @@ const Shell = ({
   hintId,
   children,
 }: Wrapper & {
-  readonly id: string;
-  readonly errorId: string;
-  readonly hintId: string;
-  readonly children: ReactNode;
-}): React.JSX.Element => (
+  id: string;
+  errorId: string;
+  hintId: string;
+  children: ReactNode;
+}) => (
   <div className={styles.field}>
     <label className={styles.label} htmlFor={id}>
       {label}

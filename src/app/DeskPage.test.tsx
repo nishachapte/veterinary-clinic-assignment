@@ -162,6 +162,54 @@ describe('reception desk workflow', () => {
     expect(await inPanel(CUSTOMER, /dog/)).toBeVisible();
   });
 
+  it('offers a retry when the species list fails to load', async () => {
+    const user = userEvent.setup();
+    server.use(
+      http.get('/api/pettypes', () =>
+        HttpResponse.json({ status: 500, detail: 'Species unavailable' }, { status: 500 }),
+      ),
+    );
+
+    renderDesk('/desk?owner=1');
+    await inPanel(CUSTOMER, GEORGE_PHONE);
+    await user.click(await buttonIn(CUSTOMER, ADD_PET));
+
+    // The pet form cannot be completed without the species list, so the panel
+    // must say so AND offer a way forward rather than stranding the
+    // receptionist on a dead end mid-call.
+    expect(await inPanel(CUSTOMER, /species list is required/i)).toBeVisible();
+    expect(await buttonIn(CUSTOMER, /try again/i)).toBeVisible();
+  });
+
+  // The two tests below cover `useSearchHotkey` and `useListKeyboard`. Both
+  // are keyboard-only paths with no on-screen affordance, so nothing else in
+  // the suite would notice if they stopped working.
+  it('focuses the search box when / is pressed', async () => {
+    const user = userEvent.setup();
+    renderDesk('/desk');
+
+    const search = screen.getByLabelText(/search by last name/i);
+    expect(search).not.toHaveFocus();
+
+    await user.keyboard('/');
+
+    expect(search).toHaveFocus();
+  });
+
+  it('picks a customer with the arrow keys and Enter', async () => {
+    const user = userEvent.setup();
+    renderDesk('/desk');
+
+    // A numeric query matches both fixtures, so there is a list to move down.
+    await user.type(screen.getByLabelText(/search by last name/i), '608555');
+    await searchResult(/George Franklin/);
+
+    // Focus stays in the input throughout — the list is driven from there.
+    await user.keyboard('{ArrowDown}{Enter}');
+
+    expect(await inPanel(CUSTOMER, 'Betty Davis')).toBeVisible();
+  });
+
   it('opens a deep link straight to a pet', async () => {
     renderDesk('/desk?owner=1&pet=1');
     // The owner payload carries the pet and its visits, so one request fills

@@ -17,7 +17,7 @@ import { PetZone } from '~/features/pet-detail/PetZone';
 import { useSelection } from './selection';
 import styles from './DeskPage.module.css';
 
-export const DeskPage = (): React.JSX.Element => {
+export const DeskPage = () => {
   const { selection, select } = useSelection();
   const { recent, remember } = useRecentOwners();
   const [creatingOwner, setCreatingOwner] = useState(false);

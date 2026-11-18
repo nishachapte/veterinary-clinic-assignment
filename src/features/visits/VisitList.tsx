@@ -6,8 +6,8 @@ import styles from './VisitList.module.css';
 export const VisitList = ({
   visits,
 }: {
-  readonly visits: readonly Visit[];
-}): React.JSX.Element => {
+  visits: readonly Visit[];
+}) => {
   if (visits.length === 0) {
     return <EmptyState>No visits recorded for this pet yet.</EmptyState>;
   }

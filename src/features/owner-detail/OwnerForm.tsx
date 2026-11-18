@@ -18,11 +18,11 @@ const EMPTY: OwnerFormValues = {
 };
 
 interface OwnerFormProps {
-  readonly defaultValues?: OwnerFormValues;
-  readonly submitLabel: string;
-  readonly pending: boolean;
-  readonly onSubmit: (values: OwnerFieldsPayload) => Promise<unknown>;
-  readonly onCancel: () => void;
+  defaultValues?: OwnerFormValues;
+  submitLabel: string;
+  pending: boolean;
+  onSubmit: (values: OwnerFieldsPayload) => Promise<unknown>;
+  onCancel: () => void;
 }
 
 export const OwnerForm = ({
@@ -31,7 +31,7 @@ export const OwnerForm = ({
   pending,
   onSubmit,
   onCancel,
-}: OwnerFormProps): React.JSX.Element => {
+}: OwnerFormProps) => {
   const [formErrors, setFormErrors] = useState<readonly string[]>([]);
 
   const { register, handleSubmit, setError, formState } = useForm<

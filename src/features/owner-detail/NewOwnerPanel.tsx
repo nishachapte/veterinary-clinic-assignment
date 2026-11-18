@@ -5,14 +5,14 @@ import { OwnerForm } from './OwnerForm';
 
 interface NewOwnerPanelProps {
   /** Receives the id so the desk can switch straight to the new customer. */
-  readonly onCreated: (id: OwnerId) => void;
-  readonly onCancel: () => void;
+  onCreated: (id: OwnerId) => void;
+  onCancel: () => void;
 }
 
 export const NewOwnerPanel = ({
   onCreated,
   onCancel,
-}: NewOwnerPanelProps): React.JSX.Element => {
+}: NewOwnerPanelProps) => {
   const createOwner = useCreateOwner();
 
   return (
